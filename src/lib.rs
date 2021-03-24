@@ -2,7 +2,7 @@ extern crate tch;
 extern crate serde;
 extern crate serde_json;
 
-use std::path::Path;
+use std::{fs, path::Path};
 use std::fs::File;
 use std::io::BufReader;
 
@@ -15,6 +15,7 @@ use tch::nn::{VarStore, Adam, Optimizer, OptimizerConfig};
 struct TrainerConfig {
     dataroot: Box<String>,
     modelroot: Box<String>,
+    saveroot: Box<String>,
     latent_dim: i64,
     img_size: i64,
     beta1: f64,
@@ -134,10 +135,12 @@ impl Trainer {
         generator_loss.to(Device::Cpu).double_value(&[])
     }
 
-    pub fn save(&self) {
-        self.discriminator.save(format!("{}/{}", self.config.modelroot, "discriminator.pt"))
+    pub fn save(&self, steps:u32) {
+        let root = Path::new(self.config.saveroot.as_ref()).join(format!("checkpoint-{}", steps));
+        fs::create_dir_all(&root).unwrap();
+        self.discriminator.save(root.join("discriminator.pt"))
             .expect("failed save discriminator");
-        self.generator.save(format!("{}/{}", self.config.modelroot, "generator.pt"))
+        self.generator.save(root.join("generator.pt"))
             .expect("failed save discriminator");
         println!("saved models");
     }
@@ -167,7 +170,7 @@ impl Trainer {
             }
 
             if i != 0 && i % self.config.save_steps == 0 {
-                self.save();
+                self.save(i);
             }
         }
         Ok(())

@@ -1,6 +1,7 @@
 {
     "dataroot": "D:/dataset/img_align_celeba",
     "modelroot": "model",
+    "saveroot": "trained",
     "latent_dim": 100,
     "img_size": 64,
     "beta1": 0.5,

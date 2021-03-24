@@ -1,0 +1,14 @@
+{
+    "dataroot": "D:/dataset/img_align_celeba",
+    "modelroot": "model",
+    "latent_dim": 100,
+    "img_size": 64,
+    "beta1": 0.5,
+    "lr": 0.0002,
+    "batch_size": 128,
+    "use_gpu": true,
+    "max_steps": 1000000,
+    "logging_steps": 100,
+    "eval_steps": 1000,
+    "save_steps": 5000
+}
